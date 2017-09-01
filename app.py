@@ -1,5 +1,7 @@
 import pandas as pd
 import pandas_datareader.data as web
+from extensions.candlestick import CandleStickExtension
+from extensions.css import ImportCSSExtension
 from datetime import datetime
 from flask import Flask, render_template
 
@@ -30,3 +32,12 @@ def draw(symbol):
     s = '\\n'.join(','.join("%s" % x for x in y) for y in df[['Date', 'Open','High','Low','Close','Volume']].values)
     s = "Date,Open,High,Low,Close,Volume\\n" + s
     return render_template('index.html', symbol=symbol, s=s)
+
+@app.route('/test/')
+@app.route('/test/<symbol>')
+def test(symbol=''):
+    return render_template('stock.html', symbol=symbol)
+
+
+app.jinja_env.add_extension(CandleStickExtension)
+app.jinja_env.add_extension(ImportCSSExtension)
